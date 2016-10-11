@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return flask.render_template('base.html')
+def login():
+    return flask.render_template('login.html')
 
 
 if __name__ == '__main__':
