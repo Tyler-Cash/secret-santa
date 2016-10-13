@@ -11,7 +11,13 @@
 
 {% block body_content %}
 
-     <div class="col s12 m8 offset-m2 l6 offset-l3">
-         <p>Sorry {{firstName}}, your secret santa hasn't been generated yet.</p>
-     </div>
+    <div id="santa-display" class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="card #689f38 light-green darken-2">
+            <div class="card-content white-text">
+                <span class="card-title">Secret Santa Info</span>
+                <p>Sorry {{ firstName }}, your gift reciever hasn't been determined</p>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
