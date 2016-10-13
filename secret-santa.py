@@ -11,7 +11,8 @@ db = database.get_database("database.db")
 @app.route('/')
 def home():
     if 'identifier' in session.keys():
-        return render_template('show-santa.html', user=session['email'])
+        first_name = user.get_name(session['email'], db)
+        return render_template('show-santa.html', firstName=first_name)
     else:
         return render_template('login.html')
 
