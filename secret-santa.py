@@ -23,8 +23,7 @@ def check_credentials():
     password = request.form['pass']
 
     if user.is_user(email, password, db):
-        session['identifier'] = user.create_session(email, db)
-        session['email'] = email
+        generate_session(email)
         return redirect('/')
     return render_template('login.html')
 
@@ -52,11 +51,15 @@ def create_new_user():
         if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], familyNum, db):
             return 'account creation failed, please email contact@tylercash.xyz'
 
+        generate_session(form['email'])
         return redirect('/')
     else:
         return render_template('signup.html', families=families)
 
 
+def generate_session(email):
+    session['identifier'] = user.create_session(email, db)
+    session['email'] = email
 
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
