@@ -52,14 +52,21 @@ def get_name(email, db):
     return result[0]
 
 
-def create_user(first_name, last_name, email, password, db):
+def create_user(first_name, last_name, email, password, familyID, db):
     salt = generate_salt()
     password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
 
     cur = db.cursor()
 
-    cur.execute('INSERT INTO USER (firstName, lastName, email, Password, Salt) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?);',
-                (first_name, last_name, email, password, salt))
+    cur.execute('INSERT INTO USER (firstName, lastName, email, Password, Salt, FamilyID) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?,?);',
+                (first_name, last_name, email, password, salt, familyID))
     db.commit()
 
     return True
+
+
+def get_families(db):
+    cur = db.cursor()
+    cur.execute('SELECT * FROM FAMILY')
+
+    return cur.fetchall()

@@ -22,6 +22,14 @@
             <input type="password" name="pass" title="Password">
             <label>Confirm Password</label>
             <input type="password" name="uselessPassword" title="Password">
+            <label>Select family</label>
+            {% for family in families %}
+                <p>
+                    <input name="{{ family[1] }}" id="{{ family[0] }}" type="radio"/>
+                    <label for="{{ family[0] }}">{{ family[1] }}</label>
+                </p>
+            {% endfor %}
+            </label>
             <button class="btn waves-effect waves-light" id="login-button" type="submit">Login</button>
         </form>
     </div>
