@@ -4,7 +4,8 @@
 
 {% block navbar_content %}
     <ul class="right">
-        <li class="active"><a href="/signup">Sign up</a></li>
+        <li class="active"><a href="#">Sign Up</a></li>
+        <li><a href="/">Log in</a></li>
     </ul>
 {% endblock %}
 
@@ -22,6 +23,13 @@
             <input type="password" name="pass" title="Password">
             <label>Confirm Password</label>
             <input type="password" name="uselessPassword" title="Password">
+            <label>Select family</label>
+            {% for family in families %}
+                <p>
+                    <input class="with-gap" name="family" id="{{ family[1] }}" value="{{ family[0] }}" type="radio"/>
+                    <label for="{{ family[1] }}">{{ family[1] }}</label>
+                </p>
+            {% endfor %}
             <button class="btn waves-effect waves-light" id="login-button" type="submit">Login</button>
         </form>
     </div>

@@ -37,6 +37,7 @@ def logout():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def create_new_user():
+    families = user.get_families(db)
     if request.method == 'POST':
         form = request.form
         if not validate_email(form['email']):
@@ -45,13 +46,15 @@ def create_new_user():
             return 'name appears to be invalid'
         if not len(form['pass']) > 0 and form['uselessPassword'] == form['pass']:
             return 'no password entered'
-
-        if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], db):
+        familyNum = int(form['family'])
+        if familyNum >= 0 and familyNum in families:
+            return 'no family selected'
+        if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], familyNum, db):
             return 'account creation failed, please email contact@tylercash.xyz'
 
         return redirect('/')
     else:
-        return render_template('signup.html')
+        return render_template('signup.html', families=families)
 
 
 
