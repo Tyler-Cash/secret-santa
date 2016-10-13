@@ -1,6 +1,9 @@
 #form-wrapper {
     margin-top: 2%;
     padding:50px 10px 50px 10px;
+}
+
+.content-border{
     border: 1px solid #b1b1b1;
 }
 
