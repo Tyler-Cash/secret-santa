@@ -49,7 +49,6 @@ def create_new_user():
         familyNum = int(form['family'])
         if familyNum >= 0 and familyNum in families:
             return 'no family selected'
-
         if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], familyNum, db):
             return 'account creation failed, please email contact@tylercash.xyz'
 
