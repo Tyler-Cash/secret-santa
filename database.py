@@ -72,7 +72,6 @@ def is_user(email, password, db):
 
     salt = salt[0][0]
 
-    test = generate_salt()
     password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
     cur.execute('SELECT * FROM USER WHERE Name LIKE UPPER(?) AND Password=?;', (email, password))
 
