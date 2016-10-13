@@ -2,7 +2,7 @@ import bcrypt
 
 
 def generate_salt():
-    return bcrypt.gensalt()
+    return bcrypt.gensalt().decode('utf-8')
 
 
 def hash_password(password, salt):
@@ -43,3 +43,16 @@ def create_session(email, db):
     db.commit()
 
     return session
+
+
+def create_user(first_name, last_name, email, password, db):
+    salt = generate_salt()
+    password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
+
+    cur = db.cursor()
+
+    cur.execute('INSERT INTO USER (first_name, last_name, email, Password, Salt) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?);',
+                (first_name, last_name, email, password, salt))
+    db.commit()
+
+    return True
