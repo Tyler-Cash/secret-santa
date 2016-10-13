@@ -13,6 +13,7 @@ $(document).ready(function () {
                 $("#result").addClass("card-panel #ff8a80 red accent-1");
             }else {
                 $("#result").addClass("card-panel #b9f6ca green accent-1");
+                window.location.href = data.redirect
             }
             $("#result").html(data.outcome);
         });

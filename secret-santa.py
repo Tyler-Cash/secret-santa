@@ -83,7 +83,7 @@ def ajax_create_new_user():
                    'ContentType': 'application/json'}
 
     generate_session(email)
-    return json.dumps({'success': True, 'outcome': '<p>Successfully created account</p>'}), 200, {
+    return json.dumps({'success': True, 'outcome': '<p>Successfully created account</p>', 'redirect': '/'}), 200, {
         'ContentType': 'application/json'}
 
 
@@ -113,6 +113,7 @@ def create_new_user():
 def generate_session(email):
     session['identifier'] = user.create_session(email, db)
     session['email'] = email
+
 
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
