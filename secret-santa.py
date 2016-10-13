@@ -19,6 +19,18 @@ def home():
         return render_template('login.html')
 
 
+@app.route('/ajaxlogin')
+def ajax_check_credentials():
+    email = request.args.get('email')
+    password = request.args.get('pass')
+
+    if user.is_user(email, password, db):
+        generate_session(email)
+        return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/'}), 200, {
+            'ContentType': 'application/json'}
+    return json.dumps({'success': False, 'outcome': '<p>Username and password not found.</p>', 'redirect': '/'}), 200, {
+        'ContentType': 'application/json'}
+
 @app.route('/login', methods=['POST'])
 def check_credentials():
     email = request.form['email']
