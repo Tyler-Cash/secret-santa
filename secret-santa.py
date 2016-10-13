@@ -9,9 +9,8 @@ db = database.get_database("database.db")
 
 @app.route('/')
 def home():
-    current_user = flask.session['identifier']
 
-    if current_user is not None:
+    if 'identifier' in flask.session.keys():
         return flask.render_template('show-santa.html', user=flask.session['email'])
     else:
         return flask.render_template('login.html')
@@ -28,6 +27,12 @@ def check_credentials():
         flask.session['email'] = email
         return flask.redirect('/')
     return flask.render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    flask.session.pop('identifier', None)
+    return flask.redirect('/')
 
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
