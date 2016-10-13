@@ -13,7 +13,7 @@ def hash_password(password, salt):
 def is_user(email, password, db):
     cur = db.cursor()
 
-    cur.execute('SELECT Salt FROM USER WHERE Name=?;', (email,))
+    cur.execute('SELECT Salt FROM USER WHERE Email=UPPER(?);', (email,))
     salt = cur.fetchall()
 
     if len(salt) is 0:
@@ -22,7 +22,7 @@ def is_user(email, password, db):
     salt = salt[0][0]
 
     password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
-    cur.execute('SELECT * FROM USER WHERE Name LIKE UPPER(?) AND Password=?;', (email, password))
+    cur.execute('SELECT * FROM USER WHERE USER.Email LIKE UPPER(?) AND Password=?;', (email, password))
 
     result = cur.fetchall()
     if len(result) is not 0:
@@ -35,7 +35,7 @@ def create_session(email, db):
     cur = db.cursor()
 
     session = generate_salt()
-    cur.execute('SELECT USERID FROM USER WHERE Name=?', (email,))
+    cur.execute('SELECT USERID FROM USER WHERE Email=UPPER(?)', (email,))
     userID = cur.fetchone()
     userID = userID[0]
 
@@ -51,7 +51,7 @@ def create_user(first_name, last_name, email, password, db):
 
     cur = db.cursor()
 
-    cur.execute('INSERT INTO USER (first_name, last_name, email, Password, Salt) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?);',
+    cur.execute('INSERT INTO USER (firstName, lastName, email, Password, Salt) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?);',
                 (first_name, last_name, email, password, salt))
     db.commit()
 
