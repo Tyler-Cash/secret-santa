@@ -4,7 +4,7 @@ import bcrypt as bcrypt
 
 
 def get_database(name):
-    conn = sqlite3.connect(name)
+    conn = sqlite3.connect(name, check_same_thread=False)
     return conn
 
 
@@ -43,6 +43,12 @@ def create_tables(db):
   FOREIGN KEY (Recipient) REFERENCES USER (UserID));''')
     conn.commit()
 
+    # FIXME add timeout for session
+    conn.execute('''CREATE TABLE SESSION (
+      SessionID     INTEGER PRIMARY KEY,
+      Secret       INTEGER);''')
+    conn.commit()
+
     return conn
 
 
@@ -75,3 +81,16 @@ def is_user(email, password, db):
         return True
     else:
         return False
+
+
+def create_session(email, db):
+    cur = db.cursor()
+
+    session = generate_salt()
+
+    cur.execute('INSERT INTO SESSION(secret) VALUES (?)', (session,))
+    cur.commit()
+
+    return session
+
+    return
