@@ -15,7 +15,10 @@ def create_tables(db):
   LastName      TEXT NOT NULL,
   Email      TEXT NOT NULL,
   Password  TEXT NOT NULL,
-  Salt      TEXT NOT NULL);''')
+  Salt      TEXT NOT NULL,
+  FamilyID  INTEGER,
+
+  FOREIGN KEY(FamilyID) REFERENCES FAMILY(FamilyID));''')
     conn.commit()
 
     conn.execute('''CREATE TABLE INTEREST (
@@ -28,10 +31,7 @@ def create_tables(db):
 
     conn.execute('''CREATE TABLE FAMILY (
   FamilyID    INTEGER PRIMARY KEY,
-  Description TEXT NOT NULL,
-  UserID      INTEGER,
-
-  FOREIGN KEY (UserID) REFERENCES USER (UserID));''')
+  Description TEXT NOT NULL);''')
     conn.commit()
 
     conn.execute('''CREATE TABLE SANTA (
