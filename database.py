@@ -46,7 +46,10 @@ def create_tables(db):
     # FIXME add timeout for session
     conn.execute('''CREATE TABLE SESSION (
       SessionID     INTEGER PRIMARY KEY,
-      Secret       INTEGER);''')
+      Secret        INTEGER,
+      UserSession   INTEGER,
+
+      FOREIGN KEY (UserSession) REFERENCES USER(UserID));''')
     conn.commit()
 
     return conn
@@ -86,10 +89,11 @@ def create_session(email, db):
     cur = db.cursor()
 
     session = generate_salt()
+    cur.execute('SELECT USERID FROM USER WHERE Name=?', (email,))
+    userID = cur.fetchone()
+    userID = userID[0]
 
-    cur.execute('INSERT INTO SESSION(secret) VALUES (?)', (session,))
+    cur.execute('INSERT INTO SESSION(secret, SessionID) VALUES (?, ?)', (session, userID))
     cur.commit()
 
     return session
-
-    return
