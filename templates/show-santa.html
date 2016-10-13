@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+{% endblock %}
+
+{% block navbar_content %}
+    <ul class="right">
+        <li><a href="/logout" class="waves-effect waves-light #c62828 red darken-3">Log out</a></li>
+    </ul>
+{% endblock %}
+
+{% block body_content %}
+     <div class="col s8 offset-s2">
+         <h3>Sorry {{ user }}, your secret santa hasn't been generated yet.</h3>
+     </div>
+{% endblock %}
