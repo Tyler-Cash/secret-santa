@@ -10,6 +10,11 @@
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/stylesheet.css') }}">
+    {% block head_content %}{% endblock %}
 </head>
 <body>
     <nav>
@@ -17,7 +22,7 @@
             <span class="brand-logo center">Druett's christmas</span>
         </div>
     </nav>
-    <div id="content-wrapper">
+    <div class="row" id="content-wrapper">
         {% block content %}{% endblock %}
     </div>
 </body>

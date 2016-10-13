@@ -1,0 +1,14 @@
+#login-wrapper{
+    margin-top: 10%;
+    padding:100px;
+    border: 1px solid #b1b1b1;
+}
+
+#login-wrapper p{
+    margin-top: 0;
+    margin-bottom: 10%;
+}
+
+#login-button{
+    float:right;
+}
