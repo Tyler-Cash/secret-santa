@@ -46,16 +46,11 @@ def create_new_user():
             return 'name appears to be invalid'
         if not len(form['pass']) > 0 and form['uselessPassword'] == form['pass']:
             return 'no password entered'
-        familyID = None
-        for family in families:
-            if family[1] in form:
-                familyID = family[0]
-                break
-
-        if familyID is None:
+        familyNum = int(form['family'])
+        if familyNum >= 0 and familyNum in families:
             return 'no family selected'
 
-        if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], familyID, db):
+        if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], familyNum, db):
             return 'account creation failed, please email contact@tylercash.xyz'
 
         return redirect('/')
