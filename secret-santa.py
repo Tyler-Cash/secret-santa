@@ -1,38 +1,36 @@
-import flask
-import os.path
-from flask import Flask
-import sqlite3
 import database
+import user
+from flask import session, request, redirect, render_template, Flask
 
 app = Flask(__name__)
 db = database.get_database("database.db")
 
+
 @app.route('/')
 def home():
-
-    if 'identifier' in flask.session.keys():
-        return flask.render_template('show-santa.html', user=flask.session['email'])
+    if 'identifier' in session.keys():
+        return render_template('show-santa.html', user=session['email'])
     else:
-        return flask.render_template('login.html')
+        return render_template('login.html')
 
 
 @app.route('/login', methods=['POST'])
 def check_credentials():
+    email = request.form['email']
+    password = request.form['pass']
 
-    email = flask.request.form['email']
-    password = flask.request.form['pass']
-
-    if database.is_user(email, password, db):
-        flask.session['identifier'] = database.create_session(email, db)
-        flask.session['email'] = email
-        return flask.redirect('/')
-    return flask.render_template('login.html')
+    if user.is_user(email, password, db):
+        session['identifier'] = user.create_session(email, db)
+        session['email'] = email
+        return redirect('/')
+    return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
-    flask.session.pop('identifier', None)
-    return flask.redirect('/')
+    session.pop('identifier', None)
+    return redirect('/')
+
 
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
