@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    console.log($('.family-radio:checked').val());
     $("#signup-form").bind('submit', function (e) {
         $.getJSON($SCRIPT_ROOT + '/AJAXsignup', {
             fName: $('input[name="fName"]').val(),
@@ -6,7 +7,7 @@ $(document).ready(function () {
             email: $('input[name="email"]').val(),
             pass: $('input[name="pass"]').val(),
             uselessPass: $('input[name="uselessPassword"]').val(),
-            family: $('input[name="family"]').val()
+            family: $('.family-radio:checked').val()
         }, function (data) {
             $("#result").removeClass();
             if(!data.success){

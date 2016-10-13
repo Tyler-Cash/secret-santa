@@ -67,12 +67,17 @@ def ajax_create_new_user():
         return json.dumps({'success': False,
                            'outcome': '<p>Provided passwords don\'t match, please ensure that:</p><ul><li>The passwords match</li></ul>'}), 200, {
                    'ContentType': 'application/json'}
-    familyExists = False
-    for familySingle in families:
-        if int(family) is familySingle[0]:
-            familyExists = True
-            break
-    if not familyExists:
+    try:
+        familyExists = False
+        for familySingle in families:
+            if int(family) is familySingle[0]:
+                familyExists = True
+                break
+        if not familyExists:
+            return json.dumps({'success': False,
+                               'outcome': '<p>Provided family was invalid, please ensure to:</p><ul><li>Select a family</li></ul>'}), 200, {
+                   'ContentType': 'application/json'}
+    except(TypeError):
         return json.dumps({'success': False,
                            'outcome': '<p>Provided family was invalid, please ensure to:</p><ul><li>Select a family</li></ul>'}), 200, {
                    'ContentType': 'application/json'}
