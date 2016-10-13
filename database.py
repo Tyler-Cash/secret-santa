@@ -93,7 +93,7 @@ def create_session(email, db):
     userID = cur.fetchone()
     userID = userID[0]
 
-    cur.execute('INSERT INTO SESSION(secret, SessionID) VALUES (?, ?)', (session, userID))
-    cur.commit()
+    cur.execute('INSERT INTO SESSION(secret, UserSession) VALUES (?, ?)', (session, userID))
+    db.commit()
 
     return session
