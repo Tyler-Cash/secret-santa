@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block head_content %}
+{% endblock %}
+
+{% block navbar_content %}
+    <ul class="right">
+        <li class="active"><a href="/signup">Sign up</a></li>
+    </ul>
+{% endblock %}
+
+{% block body_content %}
+    <div id="form-wrapper" class="col s4  offset-s4">
+        <p>User login</p>
+        <form method="POST" id="login-form" action="/signup">
+            <label>First Name</label>
+            <input type="text" name="fName" title="First Name">
+            <label>Last Name</label>
+            <input type="text" name="lName" title="Last Name">
+            <label>Email Address</label>
+            <input type="text" name="email" title="Email Address">
+            <label>Password</label>
+            <input type="password" name="pass" title="Password">
+            <label>Confirm Password</label>
+            <input type="password" name="uselessPassword" title="Password">
+            <button class="btn waves-effect waves-light" id="login-button" type="submit">Login</button>
+        </form>
+    </div>
+{% endblock %}

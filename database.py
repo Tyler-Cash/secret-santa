@@ -11,7 +11,9 @@ def create_tables(db):
 
     conn.execute('''CREATE TABLE USER (
   UserID    INTEGER PRIMARY KEY,
-  Name      TEXT NOT NULL,
+  FirstName      TEXT NOT NULL,
+  LastName      TEXT NOT NULL,
+  Email      TEXT NOT NULL,
   Password  TEXT NOT NULL,
   Salt      TEXT NOT NULL);''')
     conn.commit()
