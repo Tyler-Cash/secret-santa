@@ -1,5 +1,7 @@
 import sqlite3
 
+import bcrypt as bcrypt
+
 
 def get_database(name):
     conn = sqlite3.connect(name)
@@ -12,7 +14,8 @@ def create_tables(db):
     conn.execute('''CREATE TABLE USER (
   UserID    INTEGER PRIMARY KEY,
   Name      TEXT NOT NULL,
-  Password  TEXT NOT NULL);''')
+  Password  TEXT NOT NULL,
+  Salt      TEXT NOT NULL);''')
     conn.commit()
 
     conn.execute('''CREATE TABLE INTEREST (
@@ -41,3 +44,34 @@ def create_tables(db):
     conn.commit()
 
     return conn
+
+
+def generate_salt():
+    return bcrypt.gensalt()
+
+
+def hash_password(password, salt):
+    result = bcrypt.hashpw(password, salt).decode('utf-8')
+    return result
+
+
+def is_user(email, password, db):
+    cur = db.cursor()
+
+    cur.execute('SELECT Salt FROM USER WHERE Name=?;', (email,))
+    salt = cur.fetchall()
+
+    if len(salt) is 0:
+        return False
+
+    salt = salt[0][0]
+
+    test = generate_salt()
+    password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
+    cur.execute('SELECT * FROM USER WHERE Name LIKE UPPER(?) AND Password=?;', (email, password))
+
+    result = cur.fetchall()
+    if len(result) is not 0:
+        return True
+    else:
+        return False
