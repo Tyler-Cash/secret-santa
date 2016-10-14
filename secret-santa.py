@@ -29,6 +29,18 @@ def ajax_get_interests():
         return json.dumps({'success': True, 'outcome': results}), 200, {
             'ContentType': 'application/json'}
 
+@app.route('/ajax-add-interest')
+def ajax_add_interest():
+    if 'identifier' in session.keys():
+        description = request.args.get('description')
+        email = session['email']
+        if interest.add_interest(email, description, db):
+            return json.dumps({'success': True}), 200, {
+            'ContentType': 'application/json'}
+        else:
+            return json.dumps({'success': False}), 200, {
+            'ContentType': 'application/json'}
+
 
 @app.route('/ajax-delete-interest-<interestID>')
 def ajax_delete_interest(interestID):
