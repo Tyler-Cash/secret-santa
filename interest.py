@@ -13,3 +13,22 @@ def get_interest(email, db):
         list.append('\'interest' + str(result[1]) + '\': \'' + result[0] + '\'')
 
     return results
+
+
+def check_owner(interestID, db):
+    cur = db.cursor()
+    cur.execute('SELECT UserID FROM INTEREST WHERE InterestID=?', (interestID,))
+    result = cur.fetchone()[0]
+    cur.execute('SELECT Email FROM USER WHERE UserID=?', (result,))
+    result = cur.fetchone()[0]
+    return result
+
+
+def delete_interest(email, interestID, db):
+    if email.upper() == check_owner(interestID, db):
+        cur = db.cursor()
+        cur.execute('DELETE FROM INTEREST WHERE InterestID=?', (interestID,))
+        db.commit()
+        return True
+
+    return False
