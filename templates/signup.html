@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block head_content %}
+    <script src="{{ url_for('static', filename='javascripts/signup.js') }}"></script>
 {% endblock %}
 
 {% block navbar_content %}
@@ -11,8 +12,9 @@
 
 {% block body_content %}
     <div id="form-wrapper" class="col s4  offset-s4">
+        <div id="result"></div>
         <p>User login</p>
-        <form method="POST" id="login-form" action="/signup">
+        <form method="POST" id="signup-form" action="/signup">
             <label>First Name</label>
             <input type="text" name="fName" title="First Name">
             <label>Last Name</label>
@@ -24,9 +26,10 @@
             <label>Confirm Password</label>
             <input type="password" name="uselessPassword" title="Password">
             <label>Select family</label>
+                <input name="family"value="-1000" type="radio" checked>
             {% for family in families %}
                 <p>
-                    <input class="with-gap" name="family" id="{{ family[1] }}" value="{{ family[0] }}" type="radio"/>
+                    <input class="with-gap family-radio" name="family" id="{{ family[1] }}" value="{{ family[0] }}" type="radio"/>
                     <label for="{{ family[1] }}">{{ family[1] }}</label>
                 </p>
             {% endfor %}

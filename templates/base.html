@@ -14,6 +14,9 @@
 
     <!-- stylesheet -->
     <link rel="stylesheet" href="{{url_for('static', filename='stylesheets/stylesheet.css') }}">
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
     {% block head_content %}{% endblock %}
 </head>
 <body>
