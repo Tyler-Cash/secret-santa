@@ -22,10 +22,17 @@
     </div>
 
     <div id="interest-display" class="col s12 m8 offset-m2 l6 offset-l3">
-        <div class="card #689f38 light-green darken-2">
-            <div id="interest-holder" class="card-content white-text">
+        <div class="card #ff8a80 red accent-1">
+            <div class="card-content white-text">
                 <span class="card-title">Your interests</span>
-                <p>Please wait, interests loading...</p>
+                <div id="interest-holder">
+                    <p>Please wait, interests loading...</p>
+                </div>
+                <form id="add-interest">
+                    <div class="input-field">
+                        <input name="new-interest" placeholder="Insert an interest (e.g programming)" id="add-interest" type="text" class="validate">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
