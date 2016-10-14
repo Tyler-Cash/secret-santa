@@ -1,3 +1,6 @@
+import user
+
+
 def get_interest(email, db):
     cur = db.cursor()
 
@@ -32,3 +35,13 @@ def delete_interest(email, interestID, db):
         return True
 
     return False
+
+
+def add_interest(email, description, db):
+    cur = db.cursor()
+    userID = user.get_id(email, db)
+
+    cur.execute('INSERT INTO INTEREST(Description, UserID) VALUES (?, ?)', (description, userID))
+    db.commit()
+
+    return True
