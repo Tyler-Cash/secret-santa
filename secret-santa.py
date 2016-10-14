@@ -4,6 +4,7 @@ from flask import session, request, redirect, render_template, Flask, jsonify
 from validate_email import validate_email
 
 import database
+import interest
 import user
 
 app = Flask(__name__)
@@ -17,6 +18,16 @@ def home():
         return render_template('show-santa.html', firstName=first_name)
     else:
         return render_template('login.html')
+
+@app.route('/ajax-get-interests')
+def ajax_get_interests():
+    if 'identifier' in session.keys():
+        email = session['email']
+        results = interest.get_interest(email, db)
+        totalInterests = len(results)
+
+        return json.dumps({'success': True, 'outcome': results}), 200, {
+            'ContentType': 'application/json'}
 
 
 @app.route('/ajaxlogin')
