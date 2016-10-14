@@ -52,6 +52,13 @@ def get_name(email, db):
     return result[0]
 
 
+def get_id(email, db):
+    cur = db.cursor()
+    cur.execute('SELECT UserID FROM USER WHERE Email=UPPER(?)', (email,))
+    result = cur.fetchone()
+    return result[0]
+
+
 def create_user(first_name, last_name, email, password, familyID, db):
     salt = generate_salt()
     password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
