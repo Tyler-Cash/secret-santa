@@ -30,6 +30,18 @@ def ajax_get_interests():
             'ContentType': 'application/json'}
 
 
+@app.route('/ajax-delete-interest-<interestID>')
+def ajax_delete_interest(interestID):
+    if 'identifier' in session.keys():
+        email = session['email']
+        if interest.delete_interest(email, interestID, db):
+            return json.dumps({'success': True}), 200, {
+            'ContentType': 'application/json'}
+        else:
+            return json.dumps({'success': False}), 200, {
+                'ContentType': 'application/json'}
+
+
 @app.route('/ajaxlogin')
 def ajax_check_credentials():
     email = request.args.get('email')
