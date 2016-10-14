@@ -1,11 +1,9 @@
-$(document).ready(function () {
+function build_interests() {
     $.getJSON($SCRIPT_ROOT + '/ajax-get-interests', {}, function (data) {
-        $("#result").removeClass();
-        $("#interest-holder").addClass("card-panel #ff8a80 red accent-1");
         var getInterestsFailed = false;
         if (data.success) {
             if (data.outcome.length != 0) {
-                var html = "<span class='card-title'>Your interests</span><ul class='collection'>";
+                var html = "<ul class='collection'>";
 
                 for (var i = 0; i < data.outcome.length; i++) {
                     html += "<li class='collection-item black-text'>" + data.outcome[i][0] + "<span id='" + data.outcome[i][1] + "' class='right red-text interest-delete'>X</span></li>";
@@ -18,10 +16,14 @@ $(document).ready(function () {
             getInterestsFailed = true;
         }
 
-        if(getInterestsFailed){
-            $("#interest-holder").html("<span class='card-title'>Your interests</span><p>You appear to have no interests yet.</p>");
+        if (getInterestsFailed) {
+            $("#interest-holder").html("<p>You appear to have no interests yet.</p>");
         }
     });
+}
+$(document).ready(function () {
+    //    'main
+    build_interests();
 
     $(document).on('click', '.interest-delete', function (element) {
         console.log(element);
@@ -34,5 +36,28 @@ $(document).ready(function () {
                 Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz");
             }
         });
+
+        build_interests();
+    });
+
+
+    $("#add-interest").bind('submit', function (e) {
+        $.getJSON($SCRIPT_ROOT + '/ajax-add-interest', {
+            description: $('input[name="new-interest"]').val(),
+        }, function (data) {
+            if (!data.success) {
+                Materialize.toast("Couldn't submit interest, if this issue persists email contact@tylercash.xyz")
+            } else {
+
+            }
+            $("#result").html(data.outcome);
+        });
+
+
+        e.preventDefault();
+        build_interests();
+        $("#add-interest").val("");
+
+        return false;
     });
 });
