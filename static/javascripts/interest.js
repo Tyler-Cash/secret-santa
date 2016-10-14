@@ -29,7 +29,7 @@ $(document).ready(function () {
 
         $.getJSON($SCRIPT_ROOT + '/ajax-delete-interest-' + interest_id, {}, function (data) {
             if (data.success) {
-                $("#" + interest_id).remove();
+                $("#" + interest_id).parent().remove();
             }else {
                 Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz");
             }
