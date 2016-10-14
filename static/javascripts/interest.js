@@ -8,7 +8,7 @@ $(document).ready(function () {
                 var html = "<span class='card-title'>Your interests</span><ul class='collection'>";
 
                 for (var i = 0; i < data.outcome.length; i++) {
-                    html += "<li class='collection-item'>" + data.outcome[i][0] + "<a name='interest-delete' id='" + data.outcome[i][1] + "' class='right'>X</a></li>";
+                    html += "<li class='collection-item black-text'>" + data.outcome[i][0] + "<span id='" + data.outcome[i][1] + "' class='right red-text interest-delete'>X</span></li>";
                 }
                 $("#interest-holder").html(html + "</ul>");
             } else {
@@ -23,4 +23,16 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('click', '.interest-delete', function (element) {
+        console.log(element);
+        var interest_id = element.target.id;
+
+        $.getJSON($SCRIPT_ROOT + '/ajax-delete-interest-' + interest_id, {}, function (data) {
+            if (data.success) {
+                $("#" + interest_id).remove();
+            }else {
+                Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz");
+            }
+        });
+    });
 });
