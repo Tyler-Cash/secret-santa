@@ -20,6 +20,28 @@ function build_interests() {
             $("#interest-holder").html("<p>You appear to have no interests yet.</p>");
         }
     });
+
+    $.getJSON($SCRIPT_ROOT + '/ajax-get-recipients-interests', {}, function (data) {
+        var getInterestsFailed = false;
+        if (data.success) {
+            if (data.outcome.length != 0) {
+                var html = "<ul class='collection'>";
+
+                for (var i = 0; i < data.outcome.length; i++) {
+                    html += "<li class='collection-item black-text'>" + data.outcome[i][0] + "</li>";
+                }
+                $("#recipients-interests").html(html + "</ul>");
+            } else {
+                getInterestsFailed = true;
+            }
+        } else {
+            getInterestsFailed = true;
+        }
+
+        if (getInterestsFailed) {
+            $("#recipients-interests").html("<p>Your recipient appears to have have provied any interests.</p>");
+        }
+    });
 }
 $(document).ready(function () {
     //    'main
@@ -33,7 +55,7 @@ $(document).ready(function () {
             if (data.success) {
                 $("#" + interest_id).parent().remove();
             }else {
-                Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz");
+                Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz", 5000);
             }
         });
 

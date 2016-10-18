@@ -25,7 +25,7 @@ def home():
         return render_template('login.html')
 
 @app.route('/ajax-get-recipients-interests')
-def ajax_get_interests():
+def ajax_get_recipients_interests():
     if 'identifier' in session.keys():
         email = session['email']
         recipientEmail = santa.get_recipient(email, db)
