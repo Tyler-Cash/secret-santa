@@ -92,3 +92,13 @@ def get_families(db):
     cur.execute('SELECT * FROM FAMILY')
 
     return cur.fetchall()
+
+
+def get_from_family(db, family_ID):
+    cur = db.cursor()
+    cur.execute(
+        'SELECT Email, UserID, USER.FamilyID,FAMILY.Description FROM USER INNER JOIN FAMILY on FAMILY.FamilyID = USER.FamilyID  WHERE USER.FamilyID=?',
+        (family_ID,))
+
+    return cur.fetchall()
+
