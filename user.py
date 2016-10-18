@@ -49,7 +49,10 @@ def get_name(email, db):
     cur = db.cursor()
     cur.execute('SELECT FirstName FROM USER WHERE Email=UPPER(?)', (email,))
     result = cur.fetchone()
-    return result[0]
+    if result is None:
+        return None
+    else:
+        return result[0]
 
 
 def get_id(email, db):

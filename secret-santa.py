@@ -1,5 +1,6 @@
 import json
 
+import flask
 from flask import session, request, redirect, render_template, Flask, jsonify
 from validate_email import validate_email
 
@@ -15,7 +16,10 @@ db = database.get_database("database.db")
 def home():
     if 'identifier' in session.keys():
         first_name = user.get_name(session['email'], db)
-        return render_template('show-santa.html', firstName=first_name)
+        if first_name is not None:
+            return render_template('show-santa.html', firstName=first_name)
+        else:
+            return redirect(flask.url_for('logout'))
     else:
         return render_template('login.html')
 
@@ -170,4 +174,4 @@ def generate_session(email):
 if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
     app.secret_key = 'super secret key'
-    app.run()
+    app.run(host='0.0.0.0')
