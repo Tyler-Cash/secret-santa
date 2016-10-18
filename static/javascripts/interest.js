@@ -39,7 +39,7 @@ function build_interests() {
         }
 
         if (getInterestsFailed) {
-            $("#recipients-interests").html("<p>Your recipient appears to have have provied any interests.</p>");
+            $("#recipients-interests").html("<p>Your recipient appears to have not provided any interests.</p>");
         }
     });
 }
