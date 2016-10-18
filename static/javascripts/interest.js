@@ -56,7 +56,7 @@ $(document).ready(function () {
 
         e.preventDefault();
         build_interests();
-        $("#add-interest").val("");
+        $("#add-interest-form").val("");
 
         return false;
     });
