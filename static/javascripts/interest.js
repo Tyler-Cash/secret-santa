@@ -46,7 +46,7 @@ $(document).ready(function () {
             description: $('input[name="new-interest"]').val(),
         }, function (data) {
             if (!data.success) {
-                Materialize.toast("Couldn't submit interest, if this issue persists email contact@tylercash.xyz")
+                Materialize.toast(data.reason, 4000);
             } else {
 
             }

@@ -37,12 +37,18 @@ def ajax_get_interests():
 def ajax_add_interest():
     if 'identifier' in session.keys():
         description = request.args.get('description')
+
+        if description is "":
+            return json.dumps({'success': False,
+                               'reason': 'Please don\'t submit an empty interest'}), 200, {
+                       'ContentType': 'application/json'}
+
         email = session['email']
         if interest.add_interest(email, description, db):
             return json.dumps({'success': True}), 200, {
             'ContentType': 'application/json'}
         else:
-            return json.dumps({'success': False}), 200, {
+            return json.dumps({'success': False, 'reason':'Something went wrong adding interest, please email contact@tylercash.xyz if problem persists.'}), 200, {
             'ContentType': 'application/json'}
 
 
