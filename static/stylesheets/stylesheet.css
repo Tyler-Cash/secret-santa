@@ -6,7 +6,6 @@
 .content-border{
     border: 1px solid #b1b1b1;
 }
-
 #form-wrapper p{
     margin-top: 0;
     margin-bottom: 0;
@@ -14,4 +13,16 @@
 
 #login-button{
     float:right;
+}
+
+body {
+    margin: 0px;
+}
+
+#content-wrapper{
+    min-height: calc(100vh - 190px);
+}
+
+#footer {
+    height: 80px;
 }
