@@ -6,6 +6,7 @@ from validate_email import validate_email
 
 import database
 import interest
+import santa
 import user
 
 app = Flask(__name__)
@@ -22,6 +23,17 @@ def home():
             return redirect(flask.url_for('logout'))
     else:
         return render_template('login.html')
+
+@app.route('/ajax-get-recipients-interests')
+def ajax_get_interests():
+    if 'identifier' in session.keys():
+        email = session['email']
+        recipientEmail = santa.get_recipient(email, db)
+        results = interest.get_interest(recipientEmail, db)
+        totalInterests = len(results)
+
+        return json.dumps({'success': True, 'outcome': results}), 200, {
+            'ContentType': 'application/json'}
 
 @app.route('/ajax-get-interests')
 def ajax_get_interests():

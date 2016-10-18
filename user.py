@@ -45,6 +45,15 @@ def create_session(email, db):
     return session
 
 
+def get_email(user_id, db):
+    cur = db.cursor()
+    cur.execute('SELECT Email FROM USER WHERE UserID=UPPER(?)', (user_id,))
+    result = cur.fetchone()
+    if result is None:
+        return None
+    else:
+        return result[0]
+
 def get_name(email, db):
     cur = db.cursor()
     cur.execute('SELECT FirstName FROM USER WHERE Email=UPPER(?)', (email,))
@@ -59,7 +68,10 @@ def get_id(email, db):
     cur = db.cursor()
     cur.execute('SELECT UserID FROM USER WHERE Email=UPPER(?)', (email,))
     result = cur.fetchone()
-    return result[0]
+    if result is None:
+        return None
+    else:
+        return result[0]
 
 
 def create_user(first_name, last_name, email, password, familyID, db):
