@@ -6,6 +6,7 @@ from validate_email import validate_email
 
 import database
 import interest
+import santa
 import user
 
 app = Flask(__name__)
@@ -15,13 +16,31 @@ db = database.get_database("database.db")
 @app.route('/')
 def home():
     if 'identifier' in session.keys():
-        first_name = user.get_name(session['email'], db)
+        email = session['email']
+        first_name = user.get_name(email, db)
         if first_name is not None:
-            return render_template('show-santa.html', firstName=first_name)
+            recipient_email = santa.get_recipient(email, db)
+            recipient_name = user.get_name(recipient_email,db)
+            if recipient_name is not None:
+                return render_template('show-santa.html', firstName=None, recipient_name=recipient_name)
+            return render_template('show-santa.html', firstName=first_name, recipient_name=None)
         else:
             return redirect(flask.url_for('logout'))
     else:
         return render_template('login.html')
+
+
+@app.route('/ajax-get-recipients-interests')
+def ajax_get_recipients_interests():
+    if 'identifier' in session.keys():
+        email = session['email']
+        recipientEmail = santa.get_recipient(email, db)
+        results = interest.get_interest(recipientEmail, db)
+        totalInterests = len(results)
+
+        return json.dumps({'success': True, 'outcome': results}), 200, {
+            'ContentType': 'application/json'}
+
 
 @app.route('/ajax-get-interests')
 def ajax_get_interests():
@@ -32,6 +51,7 @@ def ajax_get_interests():
 
         return json.dumps({'success': True, 'outcome': results}), 200, {
             'ContentType': 'application/json'}
+
 
 @app.route('/ajax-add-interest')
 def ajax_add_interest():
@@ -46,10 +66,11 @@ def ajax_add_interest():
         email = session['email']
         if interest.add_interest(email, description, db):
             return json.dumps({'success': True}), 200, {
-            'ContentType': 'application/json'}
+                'ContentType': 'application/json'}
         else:
-            return json.dumps({'success': False, 'reason':'Something went wrong adding interest, please email contact@tylercash.xyz if problem persists.'}), 200, {
-            'ContentType': 'application/json'}
+            return json.dumps({'success': False,
+                               'reason': 'Something went wrong adding interest, please email contact@tylercash.xyz if problem persists.'}), 200, {
+                       'ContentType': 'application/json'}
 
 
 @app.route('/ajax-delete-interest-<interestID>')
@@ -58,7 +79,7 @@ def ajax_delete_interest(interestID):
         email = session['email']
         if interest.delete_interest(email, interestID, db):
             return json.dumps({'success': True}), 200, {
-            'ContentType': 'application/json'}
+                'ContentType': 'application/json'}
         else:
             return json.dumps({'success': False}), 200, {
                 'ContentType': 'application/json'}
@@ -75,6 +96,7 @@ def ajax_check_credentials():
             'ContentType': 'application/json'}
     return json.dumps({'success': False, 'outcome': '<p>Username and password not found.</p>', 'redirect': '/'}), 200, {
         'ContentType': 'application/json'}
+
 
 @app.route('/login', methods=['POST'])
 def check_credentials():
@@ -133,7 +155,7 @@ def ajax_create_new_user():
             if not familyExists:
                 return json.dumps({'success': False,
                                    'outcome': '<p>Provided family was invalid, please ensure to:</p><ul><li>Select a family</li></ul>'}), 200, {
-                       'ContentType': 'application/json'}
+                           'ContentType': 'application/json'}
         except(TypeError):
             return json.dumps({'success': False,
                                'outcome': '<p>Provided family was invalid, please ensure to:</p><ul><li>Select a family</li></ul>'}), 200, {
@@ -148,8 +170,9 @@ def ajax_create_new_user():
         return json.dumps({'success': True, 'outcome': '<p>Successfully created account</p>', 'redirect': '/'}), 200, {
             'ContentType': 'application/json'}
     else:
-        return json.dumps({'success': False, 'outcome': '<p>Account creation failed. Email already registered.</p>', 'redirect': '/'}), 200, {
-            'ContentType': 'application/json'}
+        return json.dumps({'success': False, 'outcome': '<p>Account creation failed. Email already registered.</p>',
+                           'redirect': '/'}), 200, {
+                   'ContentType': 'application/json'}
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -174,9 +197,11 @@ def create_new_user():
     else:
         return render_template('signup.html', families=families)
 
+
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
+
 
 def generate_session(email):
     session['identifier'] = user.create_session(email, db)
