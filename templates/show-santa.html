@@ -16,7 +16,12 @@
         <div class="card #689f38 light-green darken-2">
             <div class="card-content white-text">
                 <span class="card-title">Secret Santa Info</span>
-                <span id="recipients-interests"><p>Sorry {{ firstName }}, your gift reciever hasn't been determined</p></span>
+                {% if recipient_name is not none %}
+                    <span id="recipient-name"><p>Your gift recipient is {{ recipient_name }}!</p></span>
+                {% else %}
+                    <span id="recipient-name"><p>Sorry {{ firstName }}, your gift recipient hasn't been determined</p></span>
+                {% endif %}
+                <span id="recipients-interests"></span>
             </div>
         </div>
     </div>
