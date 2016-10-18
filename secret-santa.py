@@ -174,6 +174,9 @@ def create_new_user():
     else:
         return render_template('signup.html', families=families)
 
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy-policy.html')
 
 def generate_session(email):
     session['identifier'] = user.create_session(email, db)
