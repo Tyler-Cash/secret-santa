@@ -91,9 +91,13 @@ def ajax_check_credentials():
     password = request.args.get('pass')
 
     if user.is_user(email, password, db):
-        generate_session(email)
-        return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/'}), 200, {
+        if generate_session(email) is not -1:
+            return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/'}), 200, {
             'ContentType': 'application/json'}
+        else:
+            return json.dumps(
+                {'success': False, 'outcome': '<p>Something went wrong logging you in, please email contact@tylercash.xyz.</p>', 'redirect': '/'}), 200, {
+                       'ContentType': 'application/json'}
     return json.dumps({'success': False, 'outcome': '<p>Username and password not found.</p>', 'redirect': '/'}), 200, {
         'ContentType': 'application/json'}
 
@@ -164,8 +168,14 @@ def privacy_policy():
 
 
 def generate_session(email):
-    session['identifier'] = user.create_session(email, db)
-    session['email'] = email
+    user_secret = session.create_session(email, db)
+    if user_secret is -1:
+        return -1
+
+    response = app.make_response('/')
+    response.set_cookie('user_secret', user_secret)
+    return response
+
 
 
 if __name__ == '__main__':
