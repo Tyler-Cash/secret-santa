@@ -10,14 +10,14 @@ def select_random_user(set):
     for piece in set:
         array.append(piece[1])
 
-    sizeOfArray = len(array) - 1
-    rand = random.randint(0, sizeOfArray)
+    size_of_array = len(array) - 1
+    rand = random.randint(0, size_of_array)
 
     print(rand)
     return array[rand]
 
 
-def removeUser(person_ID, origianl_list):
+def remove_user(person_ID, origianl_list):
     list = []
     for member in origianl_list:
         if member[1] is not person_ID:

@@ -40,6 +40,7 @@ def get_email(user_id, db):
     else:
         return result[0]
 
+
 def get_name(email, db):
     cur = db.cursor()
     cur.execute('SELECT FirstName FROM USER WHERE Email=UPPER(?)', (email,))
@@ -66,8 +67,9 @@ def create_user(first_name, last_name, email, password, familyID, db):
 
     cur = db.cursor()
 
-    cur.execute('INSERT INTO USER (firstName, lastName, email, Password, Salt, FamilyID) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?,?);',
-                (first_name, last_name, email, password, salt, familyID))
+    cur.execute(
+        'INSERT INTO USER (firstName, lastName, email, Password, Salt, FamilyID) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?,?);',
+        (first_name, last_name, email, password, salt, familyID))
     db.commit()
 
     return True
@@ -83,8 +85,7 @@ def get_families(db):
 def get_from_family(db, family_ID):
     cur = db.cursor()
     cur.execute(
-        'SELECT Email, UserID, USER.FamilyID,FAMILY.Description FROM USER INNER JOIN FAMILY on FAMILY.FamilyID = USER.FamilyID  WHERE USER.FamilyID=?',
+        'SELECT Email, UserID, USER.FamilyID,FAMILY.Description FROM USER INNER JOIN FAMILY ON FAMILY.FamilyID = USER.FamilyID  WHERE USER.FamilyID=?',
         (family_ID,))
 
     return cur.fetchall()
-

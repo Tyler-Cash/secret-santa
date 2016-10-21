@@ -170,7 +170,7 @@ def ajax_create_new_user():
         login_cookie = generate_session(email)
         return json.dumps({'success': True, 'outcome': '<p>Successfully created account</p>', 'redirect': '/',
                            'user_secret': login_cookie}), 200, {
-            'ContentType': 'application/json'}
+                   'ContentType': 'application/json'}
     else:
         return json.dumps({'success': False, 'outcome': '<p>Account creation failed. Email already registered.</p>',
                            'redirect': '/'}), 200, {
@@ -183,6 +183,7 @@ def logout():
     user_id = session.get_session(cookie_secret, db)
     session.stop_session(user_id, db)
     return redirect('/')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def create_new_user():
