@@ -32,3 +32,5 @@ def get_session(cookie_secret, db):
 def stop_session(user_id, db):
     cur = db.cursor()
     cur.execute('DELETE FROM SESSION WHERE UserSession=?', (user_id,))
+    db.commit()
+    return True
