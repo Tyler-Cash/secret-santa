@@ -1,12 +1,13 @@
 import json
 
 import flask
-from flask import session, request, redirect, render_template, Flask, jsonify
+from flask import request, redirect, render_template, Flask
 from validate_email import validate_email
 
 import database
 import interest
 import santa
+import session
 import user
 
 app = Flask(__name__)
@@ -15,12 +16,14 @@ db = database.get_database("database.db")
 
 @app.route('/')
 def home():
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         first_name = user.get_name(email, db)
         if first_name is not None:
             recipient_email = santa.get_recipient(email, db)
-            recipient_name = user.get_name(recipient_email,db)
+            recipient_name = user.get_name(recipient_email, db)
             if recipient_name is not None:
                 return render_template('show-santa.html', firstName=None, recipient_name=recipient_name)
             return render_template('show-santa.html', firstName=first_name, recipient_name=None)
@@ -32,11 +35,12 @@ def home():
 
 @app.route('/ajax-get-recipients-interests')
 def ajax_get_recipients_interests():
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         recipientEmail = santa.get_recipient(email, db)
         results = interest.get_interest(recipientEmail, db)
-        totalInterests = len(results)
 
         return json.dumps({'success': True, 'outcome': results}), 200, {
             'ContentType': 'application/json'}
@@ -44,8 +48,10 @@ def ajax_get_recipients_interests():
 
 @app.route('/ajax-get-interests')
 def ajax_get_interests():
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         results = interest.get_interest(email, db)
         totalInterests = len(results)
 
@@ -55,7 +61,10 @@ def ajax_get_interests():
 
 @app.route('/ajax-add-interest')
 def ajax_add_interest():
-    if 'identifier' in session.keys():
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         description = request.args.get('description')
 
         if description is "":
@@ -63,7 +72,6 @@ def ajax_add_interest():
                                'reason': 'Please don\'t submit an empty interest'}), 200, {
                        'ContentType': 'application/json'}
 
-        email = session['email']
         if interest.add_interest(email, description, db):
             return json.dumps({'success': True}), 200, {
                 'ContentType': 'application/json'}
@@ -75,8 +83,10 @@ def ajax_add_interest():
 
 @app.route('/ajax-delete-interest-<interestID>')
 def ajax_delete_interest(interestID):
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         if interest.delete_interest(email, interestID, db):
             return json.dumps({'success': True}), 200, {
                 'ContentType': 'application/json'}
@@ -91,28 +101,19 @@ def ajax_check_credentials():
     password = request.args.get('pass')
 
     if user.is_user(email, password, db):
-        generate_session(email)
-        return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/'}), 200, {
-            'ContentType': 'application/json'}
+        login_cookie = generate_session(email)
+        if login_cookie is not -1:
+            return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/',
+                               'user_secret': login_cookie}), 200, {
+                       'ContentType': 'application/json'}
+        else:
+            return json.dumps(
+                {'success': False,
+                 'outcome': '<p>Something went wrong logging you in, please email contact@tylercash.xyz.</p>',
+                 'redirect': '/'}), 200, {
+                       'ContentType': 'application/json'}
     return json.dumps({'success': False, 'outcome': '<p>Username and password not found.</p>', 'redirect': '/'}), 200, {
         'ContentType': 'application/json'}
-
-
-@app.route('/login', methods=['POST'])
-def check_credentials():
-    email = request.form['email']
-    password = request.form['pass']
-
-    if user.is_user(email, password, db):
-        generate_session(email)
-        return redirect('/')
-    return render_template('login.html')
-
-
-@app.route('/logout')
-def logout():
-    session.pop('identifier', None)
-    return redirect('/')
 
 
 @app.route('/AJAXsignup')
@@ -175,37 +176,16 @@ def ajax_create_new_user():
                    'ContentType': 'application/json'}
 
 
-@app.route('/signup', methods=['GET', 'POST'])
-def create_new_user():
-    families = user.get_families(db)
-    if request.method == 'POST':
-        form = request.form
-        if not validate_email(form['email']):
-            return 'email invalid'
-        if not len(form['fName']) > 0 and len(form['lName']) > 0:
-            return 'name appears to be invalid'
-        if not len(form['pass']) > 0 and form['uselessPassword'] == form['pass']:
-            return 'no password entered'
-        familyNum = int(form['family'])
-        if familyNum >= 0 and familyNum in families:
-            return 'no family selected'
-        if not user.create_user(form['fName'], form['lName'], form['email'], form['pass'], familyNum, db):
-            return 'account creation failed, please email contact@tylercash.xyz'
-
-        generate_session(form['email'])
-        return redirect('/')
-    else:
-        return render_template('signup.html', families=families)
-
-
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
 
 
 def generate_session(email):
-    session['identifier'] = user.create_session(email, db)
-    session['email'] = email
+    user_secret = session.create_session(email, db)
+    if user_secret is -1:
+        return -1
+    return user_secret
 
 
 if __name__ == '__main__':
