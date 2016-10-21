@@ -186,8 +186,12 @@ def logout():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def create_new_user():
-    families = user.get_families(db)
-    return render_template('signup.html', families=families)
+    user_secret = request.cookies.get('user_secret')
+    if verify_cookie(user_secret) is None:
+        families = user.get_families(db)
+        return render_template('signup.html', families=families)
+    else:
+        return redirect('/')
 
 
 @app.route('/privacy-policy')
@@ -200,6 +204,13 @@ def generate_session(email):
     if user_secret is -1:
         return -1
     return user_secret
+
+
+def verify_cookie(cookie_secret):
+    if session.get_session(cookie_secret, db) is None:
+        return False
+    else:
+        return True
 
 
 if __name__ == '__main__':
