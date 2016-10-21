@@ -6,7 +6,10 @@ def get_interest(email, db):
 
     cur.execute('SELECT UserID FROM USER WHERE Email=upper(?)', (email,))
 
-    userID = cur.fetchone()[0]
+    userID = cur.fetchone()
+    if userID is None:
+        return None
+    userID = userID[0]
 
     cur.execute('SELECT DESCRIPTION, InterestID FROM INTEREST WHERE UserID=?', (userID,))
 
