@@ -188,7 +188,7 @@ def logout():
 @app.route('/signup', methods=['GET', 'POST'])
 def create_new_user():
     user_secret = request.cookies.get('user_secret')
-    if verify_cookie(user_secret) is None:
+    if verify_cookie(user_secret) is False:
         families = user.get_families(db)
         return render_template('signup.html', families=families)
     else:
