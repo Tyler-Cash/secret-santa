@@ -176,6 +176,12 @@ def ajax_create_new_user():
                    'ContentType': 'application/json'}
 
 
+@app.route('/signup', methods=['GET', 'POST'])
+def create_new_user():
+    families = user.get_families(db)
+    return render_template('signup.html', families=families)
+
+
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
