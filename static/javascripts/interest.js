@@ -54,7 +54,7 @@ $(document).ready(function () {
         $.getJSON($SCRIPT_ROOT + '/ajax-delete-interest-' + interest_id, {}, function (data) {
             if (data.success) {
                 $("#" + interest_id).parent().remove();
-            }else {
+            } else {
                 Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz", 5000);
             }
         });
@@ -81,5 +81,9 @@ $(document).ready(function () {
         $("#add-interest-form").val("");
 
         return false;
+    });
+
+    $('#logout-button').click(function () {
+        Cookies.remove('user_secret');
     });
 });
