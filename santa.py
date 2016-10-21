@@ -11,8 +11,9 @@ def get_recipient(santaEmail, db):
     else:
         return None
 
-def add_recipient(santa_ID,recipient_ID, db):
+
+def add_recipient(santa_ID, recipient_ID, db):
     cur = db.cursor()
-    cur.execute('INSERT INTO SANTA(Santa, Recipient) VALUES (?,?)',(santa_ID, recipient_ID))
+    cur.execute('INSERT INTO SANTA(Santa, Recipient) VALUES (?,?)', (santa_ID, recipient_ID))
     db.commit()
     return True
