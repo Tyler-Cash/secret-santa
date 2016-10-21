@@ -83,8 +83,10 @@ def ajax_add_interest():
 
 @app.route('/ajax-delete-interest-<interestID>')
 def ajax_delete_interest(interestID):
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         if interest.delete_interest(email, interestID, db):
             return json.dumps({'success': True}), 200, {
                 'ContentType': 'application/json'}
