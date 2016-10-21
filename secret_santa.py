@@ -167,8 +167,9 @@ def ajax_create_new_user():
                                'outcome': '<p>Account creation failed. Please email contact@tylercash.xyz if this issue persists</p>'}), 500, {
                        'ContentType': 'application/json'}
 
-        generate_session(email)
-        return json.dumps({'success': True, 'outcome': '<p>Successfully created account</p>', 'redirect': '/'}), 200, {
+        login_cookie = generate_session(email)
+        return json.dumps({'success': True, 'outcome': '<p>Successfully created account</p>', 'redirect': '/',
+                           'user_secret': login_cookie}), 200, {
             'ContentType': 'application/json'}
     else:
         return json.dumps({'success': False, 'outcome': '<p>Account creation failed. Email already registered.</p>',
