@@ -48,8 +48,10 @@ def ajax_get_recipients_interests():
 
 @app.route('/ajax-get-interests')
 def ajax_get_interests():
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         results = interest.get_interest(email, db)
         totalInterests = len(results)
 
@@ -59,7 +61,9 @@ def ajax_get_interests():
 
 @app.route('/ajax-add-interest')
 def ajax_add_interest():
-    if 'identifier' in session.keys():
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
         description = request.args.get('description')
 
         if description is "":
