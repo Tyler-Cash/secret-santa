@@ -64,6 +64,7 @@ def ajax_add_interest():
     cookie_secret = request.cookies.get('user_secret')
     user_id = session.get_session(cookie_secret, db)
     if user_id is not None:
+        email = user.get_email(user_id, db)
         description = request.args.get('description')
 
         if description is "":
@@ -71,7 +72,6 @@ def ajax_add_interest():
                                'reason': 'Please don\'t submit an empty interest'}), 200, {
                        'ContentType': 'application/json'}
 
-        email = session['email']
         if interest.add_interest(email, description, db):
             return json.dumps({'success': True}), 200, {
                 'ContentType': 'application/json'}
