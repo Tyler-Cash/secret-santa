@@ -176,6 +176,19 @@ def ajax_create_new_user():
                    'ContentType': 'application/json'}
 
 
+@app.route('/logout')
+def logout():
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    session.stop_session(user_id, db)
+    return redirect('/')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def create_new_user():
+    families = user.get_families(db)
+    return render_template('signup.html', families=families)
+
+
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
