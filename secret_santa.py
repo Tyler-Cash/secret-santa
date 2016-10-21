@@ -176,6 +176,13 @@ def ajax_create_new_user():
                    'ContentType': 'application/json'}
 
 
+@app.route('/logout')
+def logout():
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    session.stop_session(user_id, db)
+    return redirect('/')
+
 @app.route('/signup', methods=['GET', 'POST'])
 def create_new_user():
     families = user.get_families(db)
