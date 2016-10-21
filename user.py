@@ -31,20 +31,6 @@ def is_user(email, password, db):
         return False
 
 
-def create_session(email, db):
-    cur = db.cursor()
-
-    session = generate_salt()
-    cur.execute('SELECT USERID FROM USER WHERE Email=UPPER(?)', (email,))
-    userID = cur.fetchone()
-    userID = userID[0]
-
-    cur.execute('INSERT INTO SESSION(secret, UserSession) VALUES (?, ?)', (session, userID))
-    db.commit()
-
-    return session
-
-
 def get_email(user_id, db):
     cur = db.cursor()
     cur.execute('SELECT Email FROM USER WHERE UserID=UPPER(?)', (user_id,))
