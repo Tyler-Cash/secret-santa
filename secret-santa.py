@@ -35,8 +35,10 @@ def home():
 
 @app.route('/ajax-get-recipients-interests')
 def ajax_get_recipients_interests():
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         recipientEmail = santa.get_recipient(email, db)
         results = interest.get_interest(recipientEmail, db)
 
