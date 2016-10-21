@@ -46,7 +46,7 @@ def create_tables(db):
     # FIXME add timeout for session
     conn.execute('''CREATE TABLE SESSION (
       SessionID     INTEGER PRIMARY KEY,
-      Secret        INTEGER,
+      Secret        TEXT,
       UserSession   INTEGER,
 
       FOREIGN KEY (UserSession) REFERENCES USER(UserID));''')

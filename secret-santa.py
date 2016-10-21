@@ -16,8 +16,10 @@ db = database.get_database("database.db")
 
 @app.route('/')
 def home():
-    if 'identifier' in session.keys():
-        email = session['email']
+    cookie_secret = request.cookies.get('user_secret')
+    user_id = session.get_session(cookie_secret, db)
+    if user_id is not None:
+        email = user.get_email(user_id, db)
         first_name = user.get_name(email, db)
         if first_name is not None:
             recipient_email = santa.get_recipient(email, db)
@@ -91,12 +93,16 @@ def ajax_check_credentials():
     password = request.args.get('pass')
 
     if user.is_user(email, password, db):
-        if generate_session(email) is not -1:
-            return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/'}), 200, {
-            'ContentType': 'application/json'}
+        login_cookie = generate_session(email)
+        if login_cookie is not -1:
+            return json.dumps({'success': True, 'outcome': '<p>Successfully logged in</p>', 'redirect': '/',
+                               'user_secret': login_cookie}), 200, {
+                       'ContentType': 'application/json'}
         else:
             return json.dumps(
-                {'success': False, 'outcome': '<p>Something went wrong logging you in, please email contact@tylercash.xyz.</p>', 'redirect': '/'}), 200, {
+                {'success': False,
+                 'outcome': '<p>Something went wrong logging you in, please email contact@tylercash.xyz.</p>',
+                 'redirect': '/'}), 200, {
                        'ContentType': 'application/json'}
     return json.dumps({'success': False, 'outcome': '<p>Username and password not found.</p>', 'redirect': '/'}), 200, {
         'ContentType': 'application/json'}
@@ -171,11 +177,7 @@ def generate_session(email):
     user_secret = session.create_session(email, db)
     if user_secret is -1:
         return -1
-
-    response = app.make_response('/')
-    response.set_cookie('user_secret', user_secret)
-    return response
-
+    return user_secret
 
 
 if __name__ == '__main__':
