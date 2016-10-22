@@ -16,6 +16,11 @@
     float: right;
 }
 
+.loading {
+    background-size: 25px 25px;
+    background: #ffffff url("/static/img/rolling.gif") no-repeat right center;
+}
+
 body {
     margin: 0;
 }
