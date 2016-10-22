@@ -64,6 +64,9 @@ $(document).ready(function () {
 
 
     $("#add-interest").bind('submit', function (e) {
+        $("#add-interest-form").addClass("loading");
+        $("#add-interest-form").prop("disabled", true);
+        $("#add-interest-form").attr("placeholder", "Sending interest...");
         $.getJSON($SCRIPT_ROOT + '/ajax-add-interest', {
             description: $('input[name="new-interest"]').val(),
         }, function (data) {
@@ -73,9 +76,10 @@ $(document).ready(function () {
 
             }
             $("#result").html(data.outcome);
+            $("#add-interest-form").removeClass("loading");
+            $("#add-interest-form").prop("disabled", false);
+            $("#add-interest-form").attr("placeholder", "Insert an interest (e.g. programming)");
         });
-
-
         e.preventDefault();
         build_interests();
         $("#add-interest-form").val("");
