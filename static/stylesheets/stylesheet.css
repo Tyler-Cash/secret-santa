@@ -18,7 +18,8 @@
 
 .loading {
     background-size: 25px 25px;
-    background: #ffffff url("/static/img/rolling.gif") no-repeat right center;
+    background: #000000 url("https://www.voki.com/images/ajax-loader.gif") no-repeat right center;
+    background-size: 30px
 }
 
 body {
