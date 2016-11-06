@@ -2,15 +2,13 @@ function build_interests() {
     $.getJSON($SCRIPT_ROOT + '/ajax-get-interests', {}, function (data) {
         var getInterestsFailed = false;
         if (data.success) {
-            if (data.outcome.length != 0) {
-                var html = "<ul class='collection'>";
+            var html = "<ul class='collection' id='own-interests'></ul>";
+            $("#interest-holder").html(html);
+            for (var i = 0; i < data.outcome.length; i++) {
+                $("#own-interests").append("<li id='" + data.outcome[i][1] + "' class='collection-item black-text'></li>");
+                $("#" + data.outcome[i][1]).text(data.outcome[i][0]);
+                $("#" + data.outcome[i][1]).append("<span class='right red-text interest-delete'>X</span></li>");
 
-                for (var i = 0; i < data.outcome.length; i++) {
-                    html += "<li class='collection-item black-text'>" + data.outcome[i][0] + "<span id='" + data.outcome[i][1] + "' class='right red-text interest-delete'>X</span></li>";
-                }
-                $("#interest-holder").html(html + "</ul>");
-            } else {
-                getInterestsFailed = true;
             }
         } else {
             getInterestsFailed = true;
@@ -24,15 +22,11 @@ function build_interests() {
     $.getJSON($SCRIPT_ROOT + '/ajax-get-recipients-interests', {}, function (data) {
         var getInterestsFailed = false;
         if (data.success) {
-            if (data.outcome.length != 0) {
-                var html = "<ul class='collection'>";
-
-                for (var i = 0; i < data.outcome.length; i++) {
-                    html += "<li class='collection-item black-text'>" + data.outcome[i][0] + "</li>";
-                }
-                $("#recipients-interests").html(html + "</ul>");
-            } else {
-                getInterestsFailed = true;
+            var html = "<ul class='collection' id='recipient-interests'></ul>";
+            $("#recipients-interests").html(html);
+            for (var i = 0; i < data.outcome.length; i++) {
+                $("#recipient-interests").append("<li id='recipient-" + data.outcome[i][1] + "' class='collection-item black-text'></li>");
+                $("#recipient-" + data.outcome[i][1]).text(data.outcome[i][0]);
             }
         } else {
             getInterestsFailed = true;
