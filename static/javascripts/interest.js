@@ -1,32 +1,41 @@
 function build_interests() {
     $.getJSON($SCRIPT_ROOT + '/ajax-get-interests', {}, function (data) {
-        var getInterestsFailed = false;
-        if (data.success) {
-            var html = "<ul class='collection' id='own-interests'></ul>";
-            $("#interest-holder").html(html);
-            for (var i = 0; i < data.outcome.length; i++) {
-                $("#own-interests").append("<li id='" + data.outcome[i][1] + "' class='#388e3c green darken-2 collection-item white-text'></li>");
-                $("#" + data.outcome[i][1]).text(data.outcome[i][0]);
-                $("#" + data.outcome[i][1]).append("<span class='right red-text text-accent-1 interest-delete'><strong>X</strong></span></li>");
+            var getInterestsFailed = false;
+            if (data.success) {
+                if (data.outcome.length !== 0) {
+                    var html = "<ul class='collection' id='own-interests'></ul>";
+                    $("#interest-holder").html(html);
+                    for (var i = 0; i < data.outcome.length; i++) {
+                        $("#own-interests").append("<li id='" + data.outcome[i][1] + "' class='#388e3c green darken-2 collection-item white-text'></li>");
+                        $("#" + data.outcome[i][1]).text(data.outcome[i][0]);
+                        $("#" + data.outcome[i][1]).append("<span class='right red-text text-accent-1 interest-delete'><strong>X</strong></span></li>");
 
+                    }
+                } else {
+                    getInterestsFailed = true;
+                }
+            } else {
+                getInterestsFailed = true;
             }
-        } else {
-            getInterestsFailed = true;
-        }
 
-        if (getInterestsFailed) {
-            $("#interest-holder").html("<p>You appear to have no interests yet.</p>");
+            if (getInterestsFailed) {
+                $("#interest-holder").html("<p>You appear to have no interests yet.</p>");
+            }
         }
-    });
+    );
 
     $.getJSON($SCRIPT_ROOT + '/ajax-get-recipients-interests', {}, function (data) {
         var getInterestsFailed = false;
         if (data.success) {
-            var html = "<ul class='collection' id='recipient-interests'></ul>";
-            $("#recipients-interests").html(html);
-            for (var i = 0; i < data.outcome.length; i++) {
-                $("#recipient-interests").append("<li id='recipient-" + data.outcome[i][1] + "' class='#388e3c green darken-2 collection-item white-text'></li>");
-                $("#recipient-" + data.outcome[i][1]).text(data.outcome[i][0]);
+            if (data.outcome.length !== 0) {
+                var html = "<ul class='collection' id='recipient-interests'></ul>";
+                $("#recipients-interests").html(html);
+                for (var i = 0; i < data.outcome.length; i++) {
+                    $("#recipient-interests").append("<li id='recipient-" + data.outcome[i][1] + "' class='#388e3c green darken-2 collection-item white-text'></li>");
+                    $("#recipient-" + data.outcome[i][1]).text(data.outcome[i][0]);
+                }
+            } else {
+                getInterestsFailed = true;
             }
         } else {
             getInterestsFailed = true;
