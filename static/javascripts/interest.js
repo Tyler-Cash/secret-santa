@@ -51,12 +51,11 @@ $(document).ready(function () {
     build_interests();
 
     $(document).on('click', '.interest-delete', function (element) {
-        console.log(element);
-        var interest_id = element.target.id;
+        var interest_id = element.currentTarget.parentElement.id;
 
         $.getJSON($SCRIPT_ROOT + '/ajax-delete-interest-' + interest_id, {}, function (data) {
             if (data.success) {
-                $("#" + interest_id).parent().remove();
+                $("#" + interest_id).remove();
             } else {
                 Materialize.toast("Can\'t remove interest, please email contact@tylercash.xyz", 5000);
             }
