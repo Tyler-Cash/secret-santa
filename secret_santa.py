@@ -62,7 +62,7 @@ def ajax_get_interests():
 
 @app.route('/ajax-add-interest')
 def ajax_add_interest():
-    time.sleep(1)
+    time.sleep(0.4)
     cookie_secret = request.cookies.get('user_secret')
     user_id = session.get_session(cookie_secret, db)
     if user_id is not None:
