@@ -75,7 +75,7 @@ $(document).ready(function () {
             if (!data.success) {
                 Materialize.toast(data.reason, 4000);
             } else {
-
+                build_interests();
             }
             $("#result").html(data.outcome);
             $("#add-interest-form").removeClass("loading");
