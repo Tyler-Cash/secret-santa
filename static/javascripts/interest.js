@@ -5,9 +5,9 @@ function build_interests() {
             var html = "<ul class='collection' id='own-interests'></ul>";
             $("#interest-holder").html(html);
             for (var i = 0; i < data.outcome.length; i++) {
-                $("#own-interests").append("<li id='" + data.outcome[i][1] + "' class='collection-item black-text'></li>");
+                $("#own-interests").append("<li id='" + data.outcome[i][1] + "' class='#388e3c green darken-2 collection-item white-text'></li>");
                 $("#" + data.outcome[i][1]).text(data.outcome[i][0]);
-                $("#" + data.outcome[i][1]).append("<span class='right red-text interest-delete'>X</span></li>");
+                $("#" + data.outcome[i][1]).append("<span class='right red-text text-accent-1 interest-delete'><strong>X</strong></span></li>");
 
             }
         } else {
@@ -25,7 +25,7 @@ function build_interests() {
             var html = "<ul class='collection' id='recipient-interests'></ul>";
             $("#recipients-interests").html(html);
             for (var i = 0; i < data.outcome.length; i++) {
-                $("#recipient-interests").append("<li id='recipient-" + data.outcome[i][1] + "' class='collection-item black-text'></li>");
+                $("#recipient-interests").append("<li id='recipient-" + data.outcome[i][1] + "' class='#388e3c green darken-2 collection-item white-text'></li>");
                 $("#recipient-" + data.outcome[i][1]).text(data.outcome[i][0]);
             }
         } else {
