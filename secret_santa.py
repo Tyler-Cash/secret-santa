@@ -1,4 +1,5 @@
 import json
+import uuid
 
 import flask
 import time
@@ -12,6 +13,7 @@ import session
 import user
 
 app = Flask(__name__)
+# FIXME
 db = database.get_database("database.db")
 
 
@@ -200,6 +202,52 @@ def create_new_user():
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
+
+
+@app.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'GET':
+        return render_template('reset-password.html')
+    else:
+        email = request.form['email']
+        if email is None:
+            return render_template('notification.html', message='Error, no email provided.')
+        UserID = user.get_id(email, db)
+        secret = str(uuid.uuid4().hex.upper()[0:25])
+        db.execute('INSERT INTO RESET(Secret, PasswordToReset) VALUES (?,?)', (secret, UserID))
+
+        if user.email_user(
+                                "<p>A password request has been made. Don't click on this link unless you requested a password reset</p><p><a href=https://santa.tylercash.xyz/reset-" + secret + ">Click here to reset your password</a></p>",
+                                email, db):
+            db.commit()
+            return render_template('notification.html', message='An email has been sent to the provided email address')
+        else:
+            return render_template('notification.html',
+                                   message='Email failed, please send an email to contact@tylercash.xyz')
+
+@app.route('/reset-<secret>', methods=['GET', 'POST'])
+def accept_new_pass(secret):
+    cur = db.cursor()
+    if request.method == 'GET':
+        cur.execute('SELECT * FROM RESET WHERE Secret=?', (secret,))
+        res = cur.fetchall()
+
+        if len(res) is 0:
+            return render_template('notification.html', message='It appears this link isn\'t a valid password reset link')
+
+        return render_template('new-password.html', secret=secret)
+    else:
+        cur.execute('SELECT PasswordToReset FROM RESET WHERE Secret=?', (secret,))
+        res = cur.fetchall()
+
+        if len(res) is 0:
+            return render_template('notification.html',
+                                   message='Something went wrong when resetting the password')
+
+        userID = res[0][0]
+        user.rewrite_password(request.form['password'], userID, db)
+        return redirect('/')
+
 
 
 def generate_session(email):
