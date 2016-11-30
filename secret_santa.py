@@ -237,6 +237,8 @@ def accept_new_pass(secret):
 
         return render_template('new-password.html', secret=secret)
     else:
+        if request.form['password'] != request.form['confirm-password']:
+            return render_template('notification.html', message='Passwords were not the same. Please reopen the link, or push the back button.')
         cur.execute('SELECT PasswordToReset FROM RESET WHERE Secret=?', (secret,))
         res = cur.fetchall()
 
