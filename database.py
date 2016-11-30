@@ -52,4 +52,11 @@ def create_tables(db):
       FOREIGN KEY (UserSession) REFERENCES USER(UserID));''')
     conn.commit()
 
+    conn.execute('''CREATE TABLE RESET(
+      ResetID INTEGER PRIMARY KEY,
+      Secret TEXT,
+      PasswordToReset INTEGER,
+
+      FOREIGN KEY (PasswordToReset) REFERENCES USER (UserID)););''')
+
     return conn
