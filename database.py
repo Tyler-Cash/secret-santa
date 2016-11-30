@@ -57,6 +57,6 @@ def create_tables(db):
       Secret TEXT,
       PasswordToReset INTEGER,
 
-      FOREIGN KEY (PasswordToReset) REFERENCES USER (UserID)););''')
+      FOREIGN KEY (PasswordToReset) REFERENCES USER (UserID));''')
 
     return conn

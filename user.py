@@ -1,3 +1,5 @@
+import smtplib
+from sender_pass import sender_password
 import bcrypt
 
 
@@ -9,6 +11,25 @@ def hash_password(password, salt):
     result = bcrypt.hashpw(password, salt).decode('utf-8')
     return result
 
+def rewrite_password(password, userID, db):
+    cur = db.cursor()
+    email = get_email(userID, db)
+    # TODO Extract into method
+    cur.execute('SELECT Salt FROM USER WHERE Email=UPPER(?);', (email,))
+    salt = cur.fetchall()
+
+    if len(salt) is 0:
+        return False
+
+    salt = salt[0][0]
+
+    hashed_password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
+    if userID is None:
+        return False
+    cur.execute('UPDATE USER SET Password=? WHERE UserID=?', (hashed_password, userID))
+    cur.execute('DELETE FROM RESET WHERE PasswordToReset=?', (userID,))
+    db.commit()
+    return True
 
 def is_user(email, password, db):
     cur = db.cursor()
@@ -89,3 +110,28 @@ def get_from_family(db, family_ID):
         (family_ID,))
 
     return cur.fetchall()
+
+
+# Requires user pass to be stored in sender_password variable inside of sender_pass.py
+def email_user(param, email, db):
+    name = get_name(email, db)
+
+    sender = 'contact@tylercash.xyz'
+    receivers = [email]
+    message = """From: Secret Santa <contact@tylercash.xyz>
+To: """ + name +""" <""" + email + """
+MIME-Version: 1.0
+Content-type: text/html
+Subject: Secret santa password reset
+""" + param
+
+    try:
+
+        smtp_connection = smtplib.SMTP_SSL('mail.privateemail.com:465')
+        smtp_connection.login(sender, sender_password)
+        smtp_connection.sendmail(sender, sender, message)
+        smtp_connection.quit()
+        return True
+    except smtplib.SMTPException:
+        print('Failed email to ' + email)
+
