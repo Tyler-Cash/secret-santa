@@ -217,11 +217,10 @@ def reset_password():
         UserID = user.get_id(email, db)
         secret = str(uuid.uuid4().hex.upper()[0:25])
         db.execute('INSERT INTO RESET(Secret, PasswordToReset) VALUES (?,?)', (secret, UserID))
-
+        db.commit()
         if user.email_user(
                                 "<p>A password request has been made. Don't click on this link unless you requested a password reset</p><p><a href=https://santa.tylercash.xyz/reset-" + secret + ">Click here to reset your password</a></p>",
                                 email, db):
-            db.commit()
             return render_template('notification.html', message='An email has been sent to the provided email address')
         else:
             return render_template('notification.html',
