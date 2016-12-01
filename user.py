@@ -115,11 +115,13 @@ def get_from_family(db, family_ID):
 # Requires user pass to be stored in sender_password variable inside of sender_pass.py
 def email_user(param, email, db):
     name = get_name(email, db)
+    if name is None:
+        return False
 
     sender = 'contact@tylercash.xyz'
     receivers = [email]
     message = """From: Secret Santa <contact@tylercash.xyz>
-To: """ + name +""" <""" + email + """
+To: """ + name +""" <""" + email + """>
 MIME-Version: 1.0
 Content-type: text/html
 Subject: Secret santa password reset
@@ -129,7 +131,7 @@ Subject: Secret santa password reset
 
         smtp_connection = smtplib.SMTP_SSL('mail.privateemail.com:465')
         smtp_connection.login(sender, sender_password)
-        smtp_connection.sendmail(sender, sender, message)
+        smtp_connection.sendmail(sender, receivers, message)
         smtp_connection.quit()
         return True
     except smtplib.SMTPException:
