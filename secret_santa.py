@@ -248,6 +248,11 @@ def accept_new_pass(secret):
                                    message='Something went wrong when resetting the password')
 
         userID = res[0][0]
+
+        if userID is None:
+            return render_template('notification.html',
+                                   message='Something went wrong when resetting the password')
+
         user.rewrite_password(request.form['password'], userID, db)
         return redirect('/')
 
