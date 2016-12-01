@@ -27,7 +27,9 @@ def home():
         if first_name is not None:
             recipient_email = santa.get_recipient(email, db)
             recipient_name = user.get_name(recipient_email, db)
-            if recipient_name is not None:
+            recipient_last_name = user.get_last_name(recipient_email, db)
+            if recipient_name is not None and recipient_last_name is not None:
+                recipient_name = recipient_name + " " + recipient_last_name
                 return render_template('show-santa.html', firstName=None, recipient_name=recipient_name)
             return render_template('show-santa.html', firstName=first_name, recipient_name=None)
         else:

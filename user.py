@@ -135,3 +135,12 @@ Subject: Secret santa password reset
     except smtplib.SMTPException:
         print('Failed email to ' + email)
 
+
+def get_last_name(email, db):
+    cur = db.cursor()
+    cur.execute('SELECT LastName FROM USER WHERE Email=UPPER(?)', (email,))
+    result = cur.fetchone()
+    if result is None:
+        return None
+    else:
+        return result[0]
