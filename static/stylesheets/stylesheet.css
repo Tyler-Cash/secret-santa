@@ -1,0 +1,35 @@
+#form-wrapper {
+    margin-top: 2%;
+    padding: 50px 10px 50px 10px;
+}
+
+.content-border {
+    border: 1px solid #b1b1b1;
+}
+
+#form-wrapper p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#login-button {
+    float: right;
+}
+
+.loading {
+    background-size: 25px 25px;
+    background: #000000 url("https://www.voki.com/images/ajax-loader.gif") no-repeat right center;
+    background-size: 30px
+}
+
+body {
+    margin: 0;
+}
+
+#content-wrapper {
+    min-height: calc(100vh - 150px);
+}
+
+#footer {
+    height: 80px;
+}

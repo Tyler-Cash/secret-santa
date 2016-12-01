@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block head_content %}
+    <script src="{{ url_for('static', filename='javascripts/signup.js') }}"></script>
+{% endblock %}
+
+{% block navbar_content %}
+    <ul class="right">
+        <li class="active"><a href="#">Sign Up</a></li>
+        <li><a href="/">Log in</a></li>
+    </ul>
+{% endblock %}
+
+{% block body_content %}
+    <div id="form-wrapper" class="col s12 m8 offset-m2 l6 offset-l3">
+        <div id="result"></div>
+        <p>User sign up</p>
+        <form method="POST" id="signup-form" action="/signup">
+            <label>First Name</label>
+            <input type="text" name="fName" title="First Name">
+            <label>Last Name</label>
+            <input type="text" name="lName" title="Last Name">
+            <label>Email Address</label>
+            <input type="text" name="email" title="Email Address">
+            <label>Password</label>
+            <input type="password" name="pass" title="Password">
+            <label>Confirm Password</label>
+            <input type="password" name="uselessPassword" title="Password">
+            <label>Select family</label>
+                <input name="family"value="-1000" type="radio" checked>
+            {% for family in families %}
+                <p>
+                    <input class="with-gap family-radio" name="family" id="{{ family[1] }}" value="{{ family[0] }}" type="radio"/>
+                    <label for="{{ family[1] }}">{{ family[1] }}</label>
+                </p>
+            {% endfor %}
+            <button class="btn waves-effect waves-light" id="login-button" type="submit">Login</button>
+        </form>
+    </div>
+{% endblock %}
