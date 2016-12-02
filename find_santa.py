@@ -2,18 +2,20 @@ import random
 
 import database
 import user
-import santa
+from santa import add_recipient
+from random import shuffle
+
+already_taken = []
 
 
 def select_random_user(set):
     array = []
     for piece in set:
-        array.append(piece[1])
+        array.append(piece)
 
     size_of_array = len(array) - 1
     rand = random.randint(0, size_of_array)
 
-    print(rand)
     return array[rand]
 
 
@@ -26,19 +28,22 @@ def remove_user(person_ID, origianl_list):
 
 
 db = database.get_database('database.db')
-backup1 = user.get_from_family(db, 1)
-backup2 = user.get_from_family(db, 2)
+santas = user.get_from_family(db, 3)
+santas = santas + user.get_from_family(db, 2)
 
-family1 = backup1
-family2 = backup2
-for user in family1:
-    rand_person = select_random_user(family2)
-    santa.add_recipient(user[1], rand_person, db)
-    family2 = removeUser(rand_person, family2)
+shuffle(santas)
 
-family1 = backup1
-family2 = backup2
-for user in family2:
-    rand_person = select_random_user(family1)
-    santa.add_recipient(user[1], rand_person, db)
-    family1 = removeUser(rand_person, family1)
+recipients = santas
+shuffle(recipients)
+
+for santa in santas:
+    pair_found = False
+    i = 0
+    while not pair_found:
+        i += 1
+        possible_pair = select_random_user(recipients)
+        if possible_pair[3] != santa[3] or (i > 250 and possible_pair[1] != santa[1]):
+            add_recipient(santa[1], possible_pair[1], db)
+            santas = remove_user(santa[1], santas)
+            recipients = remove_user(possible_pair[1], recipients)
+            pair_found = True
