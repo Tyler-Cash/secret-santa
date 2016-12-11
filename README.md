@@ -11,6 +11,6 @@ Once this has been completed, simply running `secret_santa.py` will run the web 
 #Finding secret santa
 Everyone's secret santa can be found by running `find_santa.py`. The family ID may need to be tweaked on lines 31 and 32 though.
 
-Screenshots of web application:
+#Screenshots of web application:
 ![Main screen](http://i.imgur.com/pfYv2V3.png)
 ![Login form](http://i.imgur.com/0mZLYlu.png)
