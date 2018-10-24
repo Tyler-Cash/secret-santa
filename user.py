@@ -11,6 +11,7 @@ def hash_password(password, salt):
     result = bcrypt.hashpw(password, salt).decode('utf-8')
     return result
 
+
 def rewrite_password(password, userID, db):
     cur = db.cursor()
     email = get_email(userID, db)
@@ -31,19 +32,9 @@ def rewrite_password(password, userID, db):
     db.commit()
     return True
 
-def is_user(email, password, db):
+def is_user(email, first_name, db):
     cur = db.cursor()
-
-    cur.execute('SELECT Salt FROM USER WHERE Email=UPPER(?);', (email,))
-    salt = cur.fetchall()
-
-    if len(salt) is 0:
-        return False
-
-    salt = salt[0][0]
-
-    password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
-    cur.execute('SELECT * FROM USER WHERE USER.Email LIKE UPPER(?) AND Password=?;', (email, password))
+    cur.execute('SELECT * FROM USER WHERE USER.Email LIKE UPPER(?) AND FirstName=UPPER(?);', (email, first_name))
 
     result = cur.fetchall()
     if len(result) is not 0:
@@ -82,15 +73,12 @@ def get_id(email, db):
         return result[0]
 
 
-def create_user(first_name, last_name, email, password, familyID, db):
-    salt = generate_salt()
-    password = hash_password(password.encode('utf-8'), salt.encode('utf-8'))
-
+def create_user(first_name, last_name, email, familyID, db):
     cur = db.cursor()
 
     cur.execute(
-        'INSERT INTO USER (firstName, lastName, email, Password, Salt, FamilyID) VALUES (UPPER(?),UPPER(?),UPPER(?),?,?,?);',
-        (first_name, last_name, email, password, salt, familyID))
+        'INSERT INTO USER (firstName, lastName, email, FamilyID) VALUES (UPPER(?),UPPER(?),UPPER(?),?);',
+        (first_name, last_name, email, familyID))
     db.commit()
 
     return True

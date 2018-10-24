@@ -14,8 +14,6 @@ def create_tables(db):
   FirstName      TEXT NOT NULL,
   LastName      TEXT NOT NULL,
   Email      TEXT NOT NULL,
-  Password  TEXT NOT NULL,
-  Salt      TEXT NOT NULL,
   FamilyID  INTEGER,
 
   FOREIGN KEY(FamilyID) REFERENCES FAMILY(FamilyID));''')

@@ -2,7 +2,7 @@ $(document).ready(function () {
     $("#login-form").bind('submit', function (e) {
         $.getJSON($SCRIPT_ROOT + '/ajaxlogin', {
             email: $('input[name="email"]').val(),
-            pass: $('input[name="pass"]').val()
+            first_name: $('input[name="first-name"]').val()
 
         }, function (data) {
             $("#result").removeClass();

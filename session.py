@@ -20,6 +20,8 @@ def create_session(email, db):
 
 
 def get_session(cookie_secret, db):
+    if cookie_secret is None:
+        return
     cur = db.cursor()
     cur.execute('SELECT UserSession FROM SESSION WHERE Secret=?;', (cookie_secret,))
     result = cur.fetchone()
@@ -27,7 +29,7 @@ def get_session(cookie_secret, db):
         result = result[0]
         return result
     else:
-        return None
+        return
 
 
 def stop_session(user_id, db):
